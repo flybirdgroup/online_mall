@@ -91,7 +91,7 @@ class OrdersCommitView(MyloginRequiredMixin):
 
         # 上传数据
  #创建订单信息表,把orderid,用户,地址,总数量,总金额,运费,付款方式,订单状态录入
-        sid = transaction.savepoint()
+        # sid = transaction.savepoint()
         order_info = OrderInfo.objects.create(
             order_id = order_id,
             user = request.user,
@@ -110,7 +110,7 @@ class OrdersCommitView(MyloginRequiredMixin):
                     sku = SKU.objects.get(id = sku_id)
                     #判断库存
                     if int(count) > sku.stock:
-                        transaction.savepoint_rollback(sid)
+                        # transaction.savepoint_rollback(sid)
                         return http.JsonResponse({"code": RETCODE.NODATAERR, "errmsg": "库存不足"})
                     #库存删,销量增加
                     original_stock = sku.stock
@@ -123,7 +123,7 @@ class OrdersCommitView(MyloginRequiredMixin):
                     ret = SKU.objects.filter(id = sku_id, stock=original_stock).update(stock= new_stock,sales = new_sales)
                     # 证明影响的行数为0,即意味数据库被修改了
                     if ret == 0:
-                        transaction.savepoint_rollback(sid)
+                        # transaction.savepoint_rollback(sid)
                         #continue意味可以如果库存修改不了的话,可以继续循环操作
                         continue
                     OrderGoods.objects.create(
@@ -135,7 +135,7 @@ class OrdersCommitView(MyloginRequiredMixin):
                     order_info.total_count += int(count)
                     order_info.total_amount += (int(count) * sku.price)
                     order_info.save()
-                    transaction.savepoint_commit(sid)
+                    # transaction.savepoint_commit(sid)
                     break
 
         #提交订单后,购物车要清空
@@ -177,4 +177,56 @@ class OrderInfoView(MyloginRequiredMixin):
 
         }
         return render(request,'user_center_order.html',context=context)
+
+class OrderComment(MyloginRequiredMixin):
+    def get(self,request,order_id):
+        try:
+            Order = OrderInfo.objects.get(order_id= order_id,user_id=request.user.id)
+        except:
+            return http.HttpResponseForbidden('商品编号无效')
+        skus = []
+
+        order_goods = Order.skus.filter(is_commented=False)
+        for good in order_goods:
+            skus.append({"default_image_url":good.sku.default_image_url.url,
+                         "name": good.sku.name,
+                         "price": str(good.sku.price),
+                         "order_id":order_id
+            })
+
+        context = {"skus": skus}
+        return render(request,'goods_judge.html',context)
+
+
+class CommentSummit(MyloginRequiredMixin):
+    def post(self,request):
+        json_dict = json.loads(request.body.decode())
+        order_id = json_dict.get("order_id")
+        sku_id = json_dict.get("sku_id")
+        comment = json_dict.get("comment")
+        score = json_dict.get("score")
+        is_anonymous = json_dict.get("is_anonymous")
+        #校验参数
+        if not all([order_id,sku_id,comment,score]):
+            return http.JsonResponse({'code': RETCODE.NODATAERR, 'errmsg':"参数不全"}, status=204)
+
+        try:
+            order_good = OrderGoods.objects.get(order_id=order_id,sku_id=sku_id)
+            sku = SKU.objects.get(id=sku_id)
+        except Exception as e:
+            print(e)
+            return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': "参数错误"}, status=400)
+        order_good.comment =comment
+        order_good.score = score
+        order_good.is_commented = True
+        if is_anonymous == True:
+            order_good.is_anonymous = True
+        order_good.save()
+        sku.comments += 1
+        sku.spu.comments += 1
+        sku.save()
+        return http.JsonResponse({"code":RETCODE.OK})
+
+
+
 

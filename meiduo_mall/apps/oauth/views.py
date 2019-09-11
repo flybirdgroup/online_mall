@@ -172,7 +172,7 @@ class SinaCallBackView(View):
         #存在的情况
         if user:
             sina_user = OAuthSinaUser()
-            sina_user = user
+            sina_user.user = user
             sina_user.uid = uid
             sina_user.save()
             login(request,user)

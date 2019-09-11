@@ -9,10 +9,12 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+import datetime
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -52,9 +54,12 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'pays.apps.PaysConfig',
     'django_crontab',
+    'corsheaders',
+    'meiduo_admin.apps.MeiduoAdminConfig'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -70,27 +75,47 @@ ROOT_URLCONF = 'meiduo_mall.urls'
 
 WSGI_APPLICATION = 'meiduo_mall.wsgi.application'
 
+# DATABASES = {
+#     #主master - 写
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'meiduo_mall',
+#         'USER': 'root',
+#         'PASSWORD': 'mysql',
+#         'HOST': '192.168.43.17',
+#         'PORT': '3306',
+#     },
+#     #从slave - 读
+#     'slave': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'meiduo_mall',
+#         'USER': 'root',
+#         'PASSWORD': 'mysql',
+#         'HOST': '192.168.43.17',
+#         'PORT': '8306',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'meiduo_mall',
-        'USER': 'root',
-        'PASSWORD': 'mysql',
-        'HOST': '192.168.43.17',
-        'PORT': '3306',
-    },
-'slave': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'meiduo_mall',
-        'USER': 'root',
-        'PASSWORD': 'mysql',
-        'HOST': '192.168.43.17',
-        'PORT': '8306',
+        'HOST':'192.168.43.17',
+        'PORT':'3306',
+        'USER':'root',
+        'PASSWORD':'mysql',
     }
-
 }
-
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'meiduo_mall',
+#         'HOST':'192.168.85.63',
+#         'PORT':'3306',
+#         'USER':'root',
+#         'PASSWORD':'mysql',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -262,6 +287,8 @@ EMAIL_FROM = '美多商城<flybirdgroup@163.com>' # 发件人抬头
 EMAIL_VERIFY_URL = 'http://www.meiduo.site:8000/emails/verification/'
 
 BASE_URL = "http://192.168.43.17:8888/"
+BASE_CONFIG = os.path.join(BASE_DIR,'utils/client.conf')
+print(BASE_CONFIG)
 DEFAULT_FILE_STORAGE = 'meiduo_mall.utils.fdfs.my_filestorage.MyFileStorage'
 
 # Haystack
@@ -285,14 +312,37 @@ ALIPAY_RETURN_URL = 'http://www.meiduo.site:8000/payment/status/'
 
 #定时任务
 
-# CRONJOBS = [
-#     # 每1分钟生成一次首页静态文件
-#     # 5颗星分别表示: 分, 时, 日, 月, 周
-#     ('*/1 * * * *', 'contents.crons.generate_static_index_html', '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'logs/crontab.log'))
-# ]
-#
-# CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
-#
+#定义任务
+CRONJOBS = [
+    # 每1分钟生成一次首页静态文件
+    # 5颗星分别表示: 分, 时, 日, 月, 周
+    ('*/1 * * * *', 'contents.crons.generate_static_index_html', '>> ' + os.path.join(os.path.dirname(BASE_DIR), 'logs/crontab.log'))
+]
+
+CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
+
 # DATABASE_ROUTERS = ['meiduo_mall.utils.db_routers.MasterSlaveDBRouter']
 #
-# STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')
+
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:8080',
+    'localhost:8080',
+    'www.meiduo.site:8080',
+    'api.meiduo.site:8000'
+)
+CORS_ALLOW_CREDENTIALS = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    )
+}
+
+# JWT配置
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.jwt_response_payload_handler',
+}

@@ -92,7 +92,7 @@
                         {# 订单右侧 价格信息 #}
 						<td width="15%">{{ order.total_amount + order.freight }} 元<br>含运费：{{ order.freight }}元</td>
 						<td width="15%">{{ order.paymethod_name }}</td>
-						<td width="15%"><a href="/static/goods_judge.html" class="oper_btn">{{ order.status_name }}</a></td>
+						<td width="15%"><a href="/comment/{{ order.order_id }}/" class="oper_btn">{{ order.status_name }}</a></td>
 					</tr>
 				</tbody>
 			</table>

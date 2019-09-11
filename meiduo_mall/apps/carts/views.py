@@ -312,10 +312,12 @@ class CartsSimpleView(View):
             cart_cookies = request.COOKIES.get('carts')
             #把字符串cookies转换字典
             #cookie的格式就是{'sku_id': {'selected': selected, 'count': count}
-            cart_cookies_dict = pickle.loads(base64.b64decode(cart_cookies.encode()))
+            cart_cookie_dict = {}
+            if cart_cookies:
+                cart_cookie_dict = pickle.loads(base64.b64decode(cart_cookies.encode()))
             cart_skus_list = []
-            for sku_id, selected_count in cart_cookies_dict.items():
-                if cart_cookies_dict[sku_id]['selected']:
+            for sku_id, selected_count in cart_cookie_dict.items():
+                if cart_cookie_dict[sku_id]['selected']:
                     sku = SKU.objects.get(id=sku_id)
                     cart_skus_list.append({
                         "default_image_url": sku.default_image_url.url,

@@ -27,5 +27,6 @@ urlpatterns = [
     url(r'^search/', include('haystack.urls')),
     url(r'^', include('carts.urls')),
     url(r'^', include('orders.urls',namespace='orders')),
-    url(r'^',include('pays.urls', namespace='pays'))
+    url(r'^',include('pays.urls', namespace='pays')),
+    url(r'^meiduo_admin/',include('meiduo_admin.urls')),
 ]

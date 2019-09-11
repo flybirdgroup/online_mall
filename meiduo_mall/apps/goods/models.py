@@ -1,4 +1,5 @@
 from django.db import models
+from rest_framework import serializers
 
 # Create your models here.
 from meiduo_mall.utils.my_model import BaseModel
@@ -171,3 +172,4 @@ class CategoryVisitCount(models.Model):
 
     class Meta:
         db_table = 'tb_category_visit_count'
+

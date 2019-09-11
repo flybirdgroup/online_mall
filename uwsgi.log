@@ -1,0 +1,50 @@
+*** Starting uWSGI 2.0.18 (64bit) on [Wed Sep  4 16:15:51 2019] ***
+compiled with version: 4.2.1 Compatible Apple LLVM 10.0.1 (clang-1001.0.46.4) on 29 August 2019 09:15:31
+os: Darwin-18.6.0 Darwin Kernel Version 18.6.0: Thu Apr 25 23:16:27 PDT 2019; root:xnu-4903.261.4~2/RELEASE_X86_64
+nodename: flybirddeAir
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /Users/flybird/Desktop/meiduo/meiduo_mall
+writing pidfile to uwsgi.pid
+detected binary path: /Users/flybird/.virtualenvs/venv/meiduo_mall2/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to //Users/flybird/Desktop/meiduo/meiduo_mall
+your processes number limit is 709
+your memory page size is 4096 bytes
+detected max file descriptor number: 10240
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to TCP address 127.0.0.1:8001 fd 3
+Python version: 3.6.8 (v3.6.8:3c6b436a57, Dec 24 2018, 02:10:22)  [GCC 4.2.1 (Apple Inc. build 5666) (dot 3)]
+!!! Python Home is not a directory: 虚拟环境路径/.virtualenvs/meiduo_mall !!!
+Set PythonHome to 虚拟环境路径/.virtualenvs/meiduo_mall
+Fatal Python error: Py_Initialize: unable to load the file system codec
+ModuleNotFoundError: No module named 'encodings'
+
+Current thread 0x0000000118a505c0 (most recent call first):
+*** Starting uWSGI 2.0.18 (64bit) on [Wed Sep  4 16:29:53 2019] ***
+compiled with version: 4.2.1 Compatible Apple LLVM 10.0.1 (clang-1001.0.46.4) on 29 August 2019 09:15:31
+os: Darwin-18.6.0 Darwin Kernel Version 18.6.0: Thu Apr 25 23:16:27 PDT 2019; root:xnu-4903.261.4~2/RELEASE_X86_64
+nodename: flybirddeAir
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 4
+current working directory: /Users/flybird/Desktop/meiduo/meiduo_mall
+writing pidfile to uwsgi.pid
+detected binary path: /Users/flybird/.virtualenvs/venv/meiduo_mall2/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to //Users/flybird/Desktop/meiduo/meiduo_mall
+your processes number limit is 709
+your memory page size is 4096 bytes
+detected max file descriptor number: 10240
+lock engine: OSX spinlocks
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to TCP address 127.0.0.1:8001 fd 3
+Python version: 3.6.8 (v3.6.8:3c6b436a57, Dec 24 2018, 02:10:22)  [GCC 4.2.1 (Apple Inc. build 5666) (dot 3)]
+!!! Python Home is not a directory: 虚拟环境路径/.virtualenvs/meiduo_mall !!!
+Set PythonHome to 虚拟环境路径/.virtualenvs/meiduo_mall
+Fatal Python error: Py_Initialize: unable to load the file system codec
+ModuleNotFoundError: No module named 'encodings'
+
+Current thread 0x000000011aba45c0 (most recent call first):

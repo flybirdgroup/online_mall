@@ -25,7 +25,7 @@ SECRET_KEY = 'yi^-)w1hb(_i=$sm$e823c@$4&^27hoymt7$3v-wfg70_s#__6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.meiduo.site']
+ALLOWED_HOSTS = ['www.meiduo.site', '127.0.0.1']
 
 # Application definition
 
@@ -71,6 +71,7 @@ ROOT_URLCONF = 'meiduo_mall.urls'
 WSGI_APPLICATION = 'meiduo_mall.wsgi.application'
 
 DATABASES = {
+    #主master - 写
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'meiduo_mall',
@@ -79,7 +80,8 @@ DATABASES = {
         'HOST': '192.168.43.17',
         'PORT': '3306',
     },
-'slave': {
+    #从slave - 读
+    'slave': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'meiduo_mall',
         'USER': 'root',
@@ -87,7 +89,6 @@ DATABASES = {
         'HOST': '192.168.43.17',
         'PORT': '8306',
     }
-
 }
 
 
@@ -247,7 +248,11 @@ LOGIN_URL = "/login"
 
 QQ_CLIENT_ID = '101518219'
 QQ_CLIENT_SECRET = '418d84ebdc7241efb79536886ae95224'
-QQ_REDIRECT_URI = 'http://www.meiduo.site:8000/oauth_callback'
+QQ_REDIRECT_URI = 'http://www.meiduo.site:/oauth_callback'
+
+APP_KEY = '100989468'
+APP_SECRET = '87c862dfde1ddd2c5957f10d268bf158'
+SINA_REDIRECT_URI = 'http://www.meiduo.site:8000/sina_callback/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # 指定邮件后端
 EMAIL_HOST = 'smtp.163.com' # 发邮件主机
@@ -281,6 +286,7 @@ ALIPAY_RETURN_URL = 'http://www.meiduo.site:8000/payment/status/'
 
 #定时任务
 
+#定义任务
 CRONJOBS = [
     # 每1分钟生成一次首页静态文件
     # 5颗星分别表示: 分, 时, 日, 月, 周
@@ -290,5 +296,5 @@ CRONJOBS = [
 CRONTAB_COMMAND_PREFIX = 'LANG_ALL=zh_cn.UTF-8'
 
 DATABASE_ROUTERS = ['meiduo_mall.utils.db_routers.MasterSlaveDBRouter']
-
+#
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')

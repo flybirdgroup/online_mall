@@ -38,7 +38,7 @@ var vm = new Vue({
 		this.detail_visit();
 
 		// 获取购物车数据
-        this.get_carts();
+        // this.get_carts();
 
 		// 获取商品评价信息
         this.get_goods_comment();
@@ -192,7 +192,7 @@ var vm = new Vue({
         // 获取商品评价信息
         get_goods_comment(){
             if (this.sku_id) {
-                var url = this.hots + '/comment/'+ this.sku_id +'/';
+                var url = this.hots + '/ordercomment/'+ this.sku_id +'/';
                 axios.get(url, {
                         responseType: 'json'
                     })

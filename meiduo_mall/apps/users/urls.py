@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^addresses/(?P<address_id>\d+)/default/$',views.DefaultAddressViews.as_view()),
     url(r'^addresses/(?P<address_id>\d+)/title/$',views.UpdateTitleAddressView.as_view()),
     url(r'^addresses/create/$', views.CreateAddressView.as_view()),
-    url(r'^password/$',views.ModifyPassword.as_view())
-
+    url(r'^password/$',views.ModifyPassword.as_view()),
+    url(r'^find_password/$', views.Find_PasswordView.as_view()),
+    url(r'^users/(?P<user_id>\d+)/password/$',views.PasswordSettingView.as_view())
 ]

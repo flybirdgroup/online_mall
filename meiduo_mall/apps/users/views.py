@@ -13,10 +13,11 @@ from django.conf import settings
 from meiduo_mall.utils.my_carts import merge_cart_cookie_to_redis
 from meiduo_mall.utils.my_email import *
 from meiduo_mall.utils.my_loginrequired import MyloginRequiredMixin
+from meiduo_mall.utils.my_openid import decode_openid
 from users.models import User
 from django import http
 from django_redis import get_redis_connection
-from .models import Address
+from users.models import Address
 from meiduo_mall.utils.response_code import RETCODE
 
 
@@ -147,6 +148,8 @@ class UserloginView(View):
         response = merge_cart_cookie_to_redis(request, user, response)
         print('haha')
         return response
+
+
 
 # 5,用户登出,让网页不再显示用户信息,而网页显示用户信息是因为set_cookies,所以把cookies的username清理掉,前段就没有信息了
 class UserLogoutView(View):
@@ -462,14 +465,41 @@ class ModifyPassword(MyloginRequiredMixin):
             response.delete_cookie("username")
 
             return response
-
-
-
-
-
-
-
-
-
-
         return render(request,'user_center_pass.html')
+
+#14 用户忘记密码
+class Find_PasswordView(View):
+    def get(self,request):
+        return render(request,'find_password.html')
+
+class PasswordSettingView(View):
+    def post(self,request,user_id):
+        #获取参数
+        json_dict = json.loads(request.body.decode())
+        password= json_dict.get('password')
+        password2 = json_dict.get('password2')
+
+        access_token = json_dict.get('access_token')
+        #检验参数
+        if not all([password, password2,access_token,user_id]):
+            return http.JsonResponse({'code': RETCODE.NODATAERR, 'message': "参数不全啦"})
+        if not re.match(r'^[0-9A-Za-z]{8,20}$',password):
+            return http.HttpResponseForbidden("用户名格式有误")
+
+        # 2,3两次密码一致性
+        if password != password2:
+            return http.HttpResponseForbidden("两次密码不一致")
+        access_token_dict = decode_openid(access_token)
+        mobile = access_token_dict["mobile"]
+        user_id = access_token_dict['user_id']
+        try:
+            user = User.objects.get(id = user_id,mobile=mobile)
+        except Exception as e:
+            print(e)
+            return http.JsonResponse({'code':RETCODE.DBERR,'message':'用户信息不匹配'})
+        #录入数据
+        user.set_password(password)
+        user.save()
+        print(user.password)
+        #返回参数
+        return http.JsonResponse({'code':RETCODE.OK,'message':'密码修改成功'})

@@ -16,6 +16,7 @@ from meiduo_mall.utils.my_category import get_categories
 from meiduo_mall.utils.my_constants import LIST_SKU_PER_COUNT
 from meiduo_mall.utils.my_loginrequired import MyloginRequiredMixin
 from meiduo_mall.utils.response_code import RETCODE
+from orders.models import OrderGoods
 
 
 class SKUListView(View):
@@ -112,11 +113,10 @@ class DetailView(View):
             "categories": categories,
             "category": category,
             "sku":sku,
-            "specs": goods_specs
-
+            "specs": goods_specs,
         }
 
-        return render(request,'detail.html',context=context)
+        return render(request, 'detail.html', context=context)
 
 
 class CategoryVisitCountView(View):
@@ -182,4 +182,16 @@ class UserBrowseHistory(MyloginRequiredMixin):
         return http.JsonResponse({'code': RETCODE.OK,'errmsg':"OK"})
 
 
+class GoodsCommentView(View):
+    def get(self,request,sku_id):
+        order_goods = OrderGoods.objects.filter(sku_id=sku_id,is_commented=True)
+        goods_comment_list = []
+        for order_good in order_goods:
+            username = order_good.order.user.username
+            goods_comment_list.append({
+                "comment":order_good.comment,
+                'username':username,
+            })
+            print(goods_comment_list)
 
+        return http.JsonResponse({'code':RETCODE.OK, 'goods_comment_list': goods_comment_list})
