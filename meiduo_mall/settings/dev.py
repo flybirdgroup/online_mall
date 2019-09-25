@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'yi^-)w1hb(_i=$sm$e823c@$4&^27hoymt7$3v-wfg70_s#__6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['www.meiduo.site', '127.0.0.1']
 
@@ -99,13 +99,14 @@ WSGI_APPLICATION = 'meiduo_mall.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'meiduo_mall',
-        'HOST':'192.168.43.17',
+        'NAME': 'meiduo14',
+        'HOST':'127.0.0.1',
         'PORT':'3306',
         'USER':'root',
-        'PASSWORD':'mysql',
+        'PASSWORD':'flybird1',
     }
 }
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
