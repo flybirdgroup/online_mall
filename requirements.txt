@@ -76,4 +76,4 @@ PyYAML==3.13
 QQLoginTool==0.3.0
 redis==3.3.7
 requests==2.20.0
-rsa==4.0
+rsa==4.1
