@@ -72,7 +72,7 @@ PyJWT==1.6.4
 PyMySQL==0.9.3
 python-dateutil==2.8.0
 pytz==2018.5
-PyYAML==3.13
+PyYAML==5.4
 QQLoginTool==0.3.0
 redis==3.3.7
 requests==2.20.0
